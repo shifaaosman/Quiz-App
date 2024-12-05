@@ -1,24 +1,54 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import StartPage from './components/StartPage';
+import Quiz from './components/Quiz';
+import Leaderboard from './components/Leaderboard';
+
+const questions = [
+  {
+    question: 'What is the capital of France?',
+    answers: ['Berlin', 'Madrid', 'Paris', 'Rome'],
+    correctAnswer: 'Paris',
+  },
+  {
+    question: 'Which planet is known as the Red Planet?',
+    answers: ['Earth', 'Mars', 'Venus', 'Jupiter'],
+    correctAnswer: 'Mars',
+  },
+  {
+    question: 'What is 2 + 2?',
+    answers: ['3', '4', '5', '6'],
+    correctAnswer: '4',
+  },
+];
 
 function App() {
+  const [quizStarted, setQuizStarted] = useState(false);
+  const [score, setScore] = useState(0);
+  const [quizCompleted, setQuizCompleted] = useState(false);
+
+  const startQuiz = () => {
+    setQuizStarted(true);
+  };
+
+  const finishQuiz = (finalScore) => {
+    setScore(finalScore);
+    setQuizCompleted(true);
+
+    // Save score to leaderboard
+    const leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+    leaderboard.push({ name: 'Player', score: finalScore });
+    localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {!quizStarted && !quizCompleted && <StartPage startQuiz={startQuiz} />}
+      {quizStarted && !quizCompleted && (
+        <Quiz questions={questions} onComplete={finishQuiz} />
+      )}
+      {quizCompleted && <Leaderboard />}
     </div>
+    
   );
 }
 
