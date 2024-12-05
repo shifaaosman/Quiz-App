@@ -23,32 +23,56 @@ const questions = [
 
 function App() {
   const [quizStarted, setQuizStarted] = useState(false);
-  const [score, setScore] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
+  const [score, setScore] = useState(0);
+  const [correctAnswers, setCorrectAnswers] = useState(0);
+  const [incorrectAnswers, setIncorrectAnswers] = useState(0);
+  const [userName, setUserName] = useState('');
 
   const startQuiz = () => {
     setQuizStarted(true);
   };
 
-  const finishQuiz = (finalScore) => {
+  const finishQuiz = (finalScore, correct, incorrect) => {
     setScore(finalScore);
+    setCorrectAnswers(correct);
+    setIncorrectAnswers(incorrect);
     setQuizCompleted(true);
 
-    // Save score to leaderboard
+    // Save score and breakdown to localStorage
     const leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
-    leaderboard.push({ name: 'Player', score: finalScore });
+    leaderboard.push({ name: userName, score: finalScore, correctAnswers, incorrectAnswers });
     localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
   };
 
+  const resetQuiz = () => {
+    setQuizStarted(false);
+    setQuizCompleted(false);
+    setScore(0);
+    setCorrectAnswers(0);
+    setIncorrectAnswers(0);
+    setUserName('');
+  };
+
   return (
-    <div className="App">
-      {!quizStarted && !quizCompleted && <StartPage startQuiz={startQuiz} />}
-      {quizStarted && !quizCompleted && (
-        <Quiz questions={questions} onComplete={finishQuiz} />
+    <div>
+      {quizCompleted ? (
+        <Leaderboard resetQuiz={resetQuiz} />
+      ) : quizStarted ? (
+        <Quiz
+          questions={questions}
+          onComplete={finishQuiz}
+          correctAnswers={correctAnswers}
+          incorrectAnswers={incorrectAnswers}
+        />
+      ) : (
+        <StartPage
+          userName={userName}
+          setUserName={setUserName}
+          startQuiz={startQuiz}
+        />
       )}
-      {quizCompleted && <Leaderboard />}
     </div>
-    
   );
 }
 

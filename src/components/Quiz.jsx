@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import Timer from './Timer';
 
@@ -31,21 +30,31 @@ function Quiz({ questions, onComplete }) {
   };
 
   return (
-    <div className="max-w-lg mx-auto p-4">
-      <h2 className="text-xl font-semibold mb-4">Question {currentQuestion + 1}</h2>
-      <div className="mb-4">{questions[currentQuestion].question}</div>
-      <div>
-        {questions[currentQuestion].answers.map((answer, index) => (
-          <button
-            key={index}
-            onClick={() => handleAnswerSelect(answer)}
-            className="block w-full p-2 mb-2 bg-gray-200 hover:bg-gray-300 rounded"
-          >
-            {answer}
-          </button>
-        ))}
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-teal-500 to-blue-600 p-6 md:p-12">
+      <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-lg text-center">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-6">Question {currentQuestion + 1}</h2>
+        <div className="text-lg text-gray-700 mb-6">{questions[currentQuestion].question}</div>
+        
+        <div className="flex flex-col space-y-4">
+          {questions[currentQuestion].answers.map((answer, index) => (
+            <button
+              key={index}
+              onClick={() => handleAnswerSelect(answer)}
+              className={`px-6 py-3 rounded-lg text-white font-medium transition-all duration-300 ease-in-out ${
+                selectedAnswer === answer
+                  ? 'bg-gradient-to-r from-purple-500 to-indigo-600 scale-105 shadow-lg'
+                  : 'bg-gradient-to-r from-blue-500 to-teal-500 hover:scale-105 hover:bg-gradient-to-r hover:from-blue-600 hover:to-teal-600'
+              }`}
+            >
+              {answer}
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-8">
+          <Timer />
+        </div>
       </div>
-      <Timer />
     </div>
   );
 }
