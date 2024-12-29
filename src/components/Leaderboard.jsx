@@ -1,5 +1,5 @@
 function Leaderboard({ resetQuiz }) {
-  const leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+  const leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-teal-500 to-blue-600 flex items-center justify-center py-8">
@@ -9,21 +9,23 @@ function Leaderboard({ resetQuiz }) {
           {leaderboard.length === 0 ? (
             <li className="text-xl text-gray-500 text-center">No scores yet</li>
           ) : (
-            leaderboard.map((entry, index) => (
-              <li
-                key={index}
-                className="flex flex-col justify-between items-start px-4 py-3 rounded-lg bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white shadow-md transition-all hover:scale-105 hover:shadow-xl"
-              >
-                <div className="flex justify-between w-full">
-                  <span className="text-lg font-semibold">{entry.name}</span>
-                  <span className="text-lg">{entry.score}</span>
-                </div>
-                <div className="mt-2">
-                  <p className="text-sm">Correct Answers: {entry.correctAnswers}</p>
-                  <p className="text-sm">Incorrect Answers: {entry.incorrectAnswers}</p>
-                </div>
-              </li>
-            ))
+            leaderboard
+              .sort((a, b) => b.score - a.score)
+              .map((entry, index) => (
+                <li
+                  key={index}
+                  className="flex flex-col justify-between items-start px-4 py-3 rounded-lg bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white shadow-md transition-all hover:scale-105 hover:shadow-xl"
+                >
+                  <div className="flex justify-between w-full">
+                    <span className="text-lg font-semibold">{entry.name}</span>
+                    <span className="text-lg">{entry.score}</span>
+                  </div>
+                  <div className="mt-2">
+                    <p className="text-sm">Correct Answers: {entry.correctAnswers}</p>
+                    <p className="text-sm">Incorrect Answers: {entry.incorrectAnswers}</p>
+                  </div>
+                </li>
+              ))
           )}
         </ul>
         <button
